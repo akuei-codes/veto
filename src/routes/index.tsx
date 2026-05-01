@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ArchitectureDiagram } from "@/components/veto/Diagram";
+import { LiveInterceptor } from "@/components/veto/LiveInterceptor";
+import { IncidentsSection } from "@/components/veto/Incidents";
 import { SignupForm } from "@/components/veto/SignupForm";
 
 export const Route = createFileRoute("/")({
@@ -15,7 +16,7 @@ function Index() {
       <div className="relative">
         <Header />
         <Hero />
-        <PainSection />
+        <IncidentsSection />
         <ProductSection />
         <TrustLine />
         <CTASection />
@@ -84,7 +85,7 @@ function Hero() {
       </div>
 
       <div className="mt-20">
-        <ArchitectureDiagram />
+        <LiveInterceptor />
       </div>
     </section>
   );
