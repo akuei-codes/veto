@@ -161,4 +161,16 @@
     100% { stroke-dashoffset: 0; }
   }
   .animate-flow { animation: flow 1.2s linear infinite; }
+
+  @keyframes scan-ring {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.8); opacity: 0; }
+  }
+  .animate-scan-ring { animation: scan-ring 2.2s ease-out infinite; }
+
+  @keyframes action-in {
+    0% { opacity: 0; transform: translateX(-12px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+  .animate-action-in { animation: action-in 0.4s ease-out; }
 }

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ArchitectureDiagram } from "@/components/veto/Diagram";
+import { LiveInterceptor } from "@/components/veto/LiveInterceptor";
+import { IncidentsSection } from "@/components/veto/Incidents";
 import { SignupForm } from "@/components/veto/SignupForm";
 
 export const Route = createFileRoute("/")({
@@ -15,7 +16,7 @@ function Index() {
       <div className="relative">
         <Header />
         <Hero />
-        <PainSection />
+        <IncidentsSection />
         <ProductSection />
         <TrustLine />
         <CTASection />
@@ -84,48 +85,7 @@ function Hero() {
       </div>
 
       <div className="mt-20">
-        <ArchitectureDiagram />
-      </div>
-    </section>
-  );
-}
-
-function PainSection() {
-  return (
-    <section className="border-t border-border/60 bg-surface/30">
-      <div className="max-w-3xl mx-auto px-6 py-24 sm:py-32">
-        <div className="text-xs font-mono uppercase tracking-[0.25em] text-block mb-8">
-          Recent incidents
-        </div>
-        <div className="space-y-7 text-lg sm:text-xl leading-relaxed text-foreground/90">
-          <p>
-            In <span className="font-mono text-warn">July 2025</span>, a Replit AI agent deleted a
-            production database during a code freeze.
-          </p>
-          <p>
-            In <span className="font-mono text-warn">December 2025</span>, Amazon's own agent took
-            down an entire production region for 13 hours.
-          </p>
-          <p className="text-muted-foreground">
-            These weren't hallucination failures. They weren't bad prompts. They were agents that
-            had access, had intent, and had nothing standing between their decision and your
-            infrastructure.
-          </p>
-          <div className="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="rounded-lg border border-border p-5 bg-surface">
-              <div className="text-xs font-mono uppercase tracking-wider text-muted-foreground mb-2">
-                Tools that exist today
-              </div>
-              <p className="text-base">Recorded every detail of what went wrong.</p>
-            </div>
-            <div className="rounded-lg border border-signal/40 p-5 bg-signal/5">
-              <div className="text-xs font-mono uppercase tracking-wider text-signal mb-2">
-                Veto
-              </div>
-              <p className="text-base font-medium">Would have stopped it.</p>
-            </div>
-          </div>
-        </div>
+        <LiveInterceptor />
       </div>
     </section>
   );
