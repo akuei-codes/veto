@@ -2,6 +2,20 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 
 import appCss from "../styles.css?url";
 
+import { Toaster } from "@/components/ui/sonner";
+
+/** Set `VITE_SITE_ORIGIN` (e.g. https://veto.ink) so shared links resolve OG images to an absolute URL. */
+function siteOrigin(): string | undefined {
+  const raw = import.meta.env.VITE_SITE_ORIGIN;
+  if (typeof raw !== "string" || !raw.trim()) return undefined;
+  return raw.trim().replace(/\/$/, "");
+}
+
+function ogImageUrl(): string {
+  const origin = siteOrigin();
+  return origin ? `${origin}/veto-og.png` : "/veto-og.png";
+}
+
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -25,42 +39,50 @@ function NotFoundComponent() {
 }
 
 export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Veto — The firewall for AI agents" },
-      {
-        name: "description",
-        content:
-          "Veto sits between every AI agent decision and every real-world action — intercepting, scoring, and blocking risky behavior before it executes.",
-      },
-      { name: "author", content: "Veto" },
-      { property: "og:title", content: "Veto — The firewall for AI agents" },
-      {
-        property: "og:description",
-        content:
-          "Observability tells you what went wrong. Veto stops it from happening. Built for LangChain, AutoGen, CrewAI, and OpenAI Assistants.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Veto — The firewall for AI agents" },
-      {
-        name: "twitter:description",
-        content:
-          "Intercept, score, and block risky AI agent actions before they execute. < 50ms overhead.",
-      },
-    ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap",
-      },
-    ],
-  }),
+  head: () => {
+    const origin = siteOrigin();
+    return {
+      meta: [
+        { charSet: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { title: "Veto — The firewall for AI agents" },
+        {
+          name: "description",
+          content:
+            "Veto sits between every AI agent decision and every real-world action — intercepting, scoring, and blocking risky behavior before it executes.",
+        },
+        { name: "author", content: "Veto" },
+        { property: "og:title", content: "Veto — The firewall for AI agents" },
+        {
+          property: "og:description",
+          content:
+            "Observability tells you what went wrong. Veto stops it from happening. Built for LangChain, AutoGen, CrewAI, and OpenAI Assistants.",
+        },
+        { property: "og:type", content: "website" },
+        { property: "og:image", content: ogImageUrl() },
+        { property: "og:image:type", content: "image/png" },
+        { property: "og:image:alt", content: "Veto — runtime firewall for AI agents" },
+        ...(origin ? ([{ property: "og:url", content: origin }] as const) : []),
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: ogImageUrl() },
+        { name: "twitter:title", content: "Veto — The firewall for AI agents" },
+        {
+          name: "twitter:description",
+          content:
+            "Intercept, score, and block risky AI agent actions before they execute. < 50ms overhead.",
+        },
+      ],
+      links: [
+        { rel: "stylesheet", href: appCss },
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap",
+        },
+      ],
+    };
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
@@ -81,5 +103,10 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+      <Toaster position="top-center" duration={5600} closeButton richColors theme="dark" />
+    </>
+  );
 }

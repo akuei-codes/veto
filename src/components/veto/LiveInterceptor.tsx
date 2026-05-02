@@ -113,9 +113,7 @@ export function LiveInterceptor() {
                   <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
                     VETO
                   </div>
-                  <div className="text-signal text-xl font-bold leading-none mt-0.5">
-                    ⌖
-                  </div>
+                  <div className="text-signal text-xl font-bold leading-none mt-0.5">⌖</div>
                   <div className="font-mono text-[9px] text-signal mt-0.5">&lt;50ms</div>
                 </div>
               </div>
@@ -152,7 +150,15 @@ export function LiveInterceptor() {
   );
 }
 
-function Stat({ label, value, tone }: { label: string; value: number; tone: "signal" | "warn" | "block" }) {
+function Stat({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: number;
+  tone: "signal" | "warn" | "block";
+}) {
   const cls = tone === "signal" ? "text-signal" : tone === "warn" ? "text-warn" : "text-block";
   return (
     <div className="flex items-baseline gap-1.5">
@@ -165,7 +171,9 @@ function Stat({ label, value, tone }: { label: string; value: number; tone: "sig
 function Pillar({ label, sub }: { label: string; sub: string }) {
   return (
     <div className="w-full rounded-md border border-border bg-surface-elevated px-2 py-2 text-center">
-      <div className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
+        {label}
+      </div>
       <div className="text-xs font-semibold mt-0.5">{sub}</div>
     </div>
   );
@@ -191,11 +199,10 @@ function ActionRow({ action, index }: { action: Action; index: number }) {
   const opacity = Math.max(0.3, 1 - index * 0.15);
 
   return (
-    <div
-      className="animate-action-in"
-      style={{ opacity }}
-    >
-      <div className={`flex items-center gap-2 rounded-md border px-2.5 py-1.5 font-mono text-[11px] backdrop-blur-sm ${tone}`}>
+    <div className="animate-action-in" style={{ opacity }}>
+      <div
+        className={`flex items-center gap-2 rounded-md border px-2.5 py-1.5 font-mono text-[11px] backdrop-blur-sm ${tone}`}
+      >
         <span className="text-sm leading-none">{icon}</span>
         <span className="font-semibold tracking-wider w-[70px] shrink-0">{action.verdict}</span>
         <span className="text-foreground/90 shrink-0">{action.tool}</span>

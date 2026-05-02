@@ -36,9 +36,7 @@ export function ArchitectureDiagram() {
       </div>
 
       <div className="mt-10 pt-6 border-t flex flex-wrap items-center justify-between gap-3 text-xs">
-        <span className="text-muted-foreground">
-          Three lines of code. Fully instrumented.
-        </span>
+        <span className="text-muted-foreground">Three lines of code. Fully instrumented.</span>
         <span className="text-signal">&lt; 50ms overhead</span>
       </div>
     </div>

@@ -38,6 +38,9 @@
   --color-surface-elevated: var(--surface-elevated);
   --color-grid: var(--grid);
 
+  /** Cinematic cyan accent aligned with transactional email chrome */
+  --color-ice: var(--ice);
+
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
@@ -83,6 +86,9 @@
   --warn: oklch(0.82 0.16 75);               /* escalate — amber */
   --block: oklch(0.65 0.24 25);              /* block — red */
 
+  /** Electric cyan spotlight */
+  --ice: #00f0ff;
+
   --grid: oklch(1 0 0 / 4%);
 }
 
@@ -108,7 +114,8 @@
     font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
     background-image:
-      radial-gradient(ellipse 80% 50% at 50% -10%, color-mix(in oklab, var(--signal) 14%, transparent), transparent 60%),
+      radial-gradient(ellipse 80% 52% at 50% -12%, color-mix(in oklab, var(--signal) 12%, transparent), transparent 58%),
+      radial-gradient(ellipse 62% 40% at 85% -4%, color-mix(in oklab, var(--ice) 14%, transparent), transparent 70%),
       linear-gradient(to bottom, var(--background), var(--background));
     background-attachment: fixed;
   }
@@ -173,4 +180,31 @@
     100% { opacity: 1; transform: translateX(0); }
   }
   .animate-action-in { animation: action-in 0.4s ease-out; }
+
+  @keyframes veto-shimmer-scroll {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+
+  .veto-heading-shimmer {
+    background-image: linear-gradient(
+      95deg,
+      var(--foreground) 0%,
+      var(--foreground) 42%,
+      color-mix(in oklab, var(--ice) 65%, white) 50%,
+      var(--foreground) 58%,
+      var(--foreground) 100%
+    );
+    background-size: 220% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: veto-shimmer-scroll 11s linear infinite;
+  }
+
+  @keyframes veto-success-pop {
+    0% { transform: scale(0.82) rotate(-12deg); opacity: 0; }
+    62% { transform: scale(1.06) rotate(4deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
 }

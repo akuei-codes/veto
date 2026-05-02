@@ -71,12 +71,11 @@ export function IncidentsSection() {
             Real incidents · last 12 months
           </div>
           <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05]">
-            This isn't hypothetical.{" "}
-            <span className="text-block">It's already happening.</span>
+            This isn't hypothetical. <span className="text-block">It's already happening.</span>
           </h2>
           <p className="mt-6 text-lg text-muted-foreground max-w-2xl">
-            Production AI agents are shipping today with no runtime constraints. Here's what
-            that's already cost teams in the last year.
+            Production AI agents are shipping today with no runtime constraints. Here's what that's
+            already cost teams in the last year.
           </p>
         </div>
 
@@ -120,7 +119,9 @@ function IncidentCard({ incident }: { incident: Incident }) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/30 to-transparent" />
         <div className="absolute top-3 left-3 flex items-center gap-2">
-          <span className={`font-mono text-[10px] uppercase tracking-wider px-2 py-1 rounded border ${sevTone} backdrop-blur-sm`}>
+          <span
+            className={`font-mono text-[10px] uppercase tracking-wider px-2 py-1 rounded border ${sevTone} backdrop-blur-sm`}
+          >
             {incident.severity === "critical" ? "● Critical" : "● High"}
           </span>
           <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-1 rounded border border-border bg-background/60 text-muted-foreground backdrop-blur-sm">
