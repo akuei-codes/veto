@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 import { resolveSiteUrl } from "./email-utils";
+import { classifyInsertError, type SaveFailedReason } from "./supabase-insert-errors";
 import { listMissingSupabaseEnv, resolveSupabaseProjectUrl, resolveSupabaseServiceRoleKey } from "./supabase-env";
 import {
   getWaitlistWelcomeSubject,
@@ -21,8 +22,8 @@ export type JoinWaitlistResult =
   | { ok: true; sentConfirmation: boolean }
   /** Supabase URL / service role not present at runtime (check Vercel env + Preview vs Production). */
   | { ok: false; code: "missing_env"; missing: ("SUPABASE_URL" | "SUPABASE_SERVICE_ROLE_KEY")[] }
-  /** Supabase insert failed — table missing, wrong URL/key, or RLS (use service role key). */
-  | { ok: false; code: "save_failed" };
+  /** Supabase insert failed — see `reason` for likely fix (table migration vs API key). */
+  | { ok: false; code: "save_failed"; reason: SaveFailedReason };
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -93,13 +94,15 @@ export const joinWaitlist = createServerFn({ method: "POST" })
         insertError.message.toLowerCase().includes("duplicate"));
 
     if (insertError && !isDuplicate) {
+      const reason = classifyInsertError(insertError);
       console.error("[waitlist] Supabase insert failed:", {
         message: insertError.message,
         code: insertError.code,
         details: insertError.details,
         hint: insertError.hint,
+        classified: reason,
       });
-      return { ok: false, code: "save_failed" };
+      return { ok: false, code: "save_failed", reason };
     }
 
     /** Always send confirmation — duplicates skipped DB insert but users still expect mail (retests, missed inbox). */

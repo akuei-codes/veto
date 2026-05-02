@@ -29,7 +29,19 @@ export function WaitlistForm() {
               description: `Add ${result.missing.join(" and ")} in Vercel → Settings → Environment Variables for this deployment (enable Production and Preview if you use both), then redeploy.`,
             });
           } else if (result.code === "save_failed") {
-            toast.error("We couldn't save your signup. Please try again in a moment.");
+            if (result.reason === "migration_required") {
+              toast.error("Waitlist storage isn't set up yet.", {
+                description:
+                  "In Supabase → SQL Editor, run the migration that creates public.waitlist_signups (see supabase/migrations in the repo), then try again.",
+              });
+            } else if (result.reason === "database_access") {
+              toast.error("We couldn't save your signup.", {
+                description:
+                  "Confirm Vercel uses SUPABASE_SERVICE_ROLE_KEY from Supabase → Project Settings → API (the service_role secret, not anon). Redeploy after fixing.",
+              });
+            } else {
+              toast.error("We couldn't save your signup. Please try again in a moment.");
+            }
           } else {
             toast.error("Something went wrong. Please try again in a moment.");
           }
