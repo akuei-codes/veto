@@ -11,6 +11,7 @@ type Phase = "idle" | "submitting" | "done";
 export function WaitlistForm() {
   const [email, setEmail] = useState("");
   const [phase, setPhase] = useState<Phase>("idle");
+  const [confirmationSent, setConfirmationSent] = useState(true);
 
   const onSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -23,13 +24,29 @@ export function WaitlistForm() {
         const result = await joinWaitlist({ data: { email } });
 
         if (!result.ok) {
-          toast.error("Something went wrong. Please try again in a moment.");
+          if (result.code === "missing_env") {
+            toast.error("Waitlist can't reach the database.", {
+              description: `Add ${result.missing.join(" and ")} in Vercel → Settings → Environment Variables for this deployment (enable Production and Preview if you use both), then redeploy.`,
+            });
+          } else if (result.code === "save_failed") {
+            toast.error("We couldn't save your signup. Please try again in a moment.");
+          } else {
+            toast.error("Something went wrong. Please try again in a moment.");
+          }
           setPhase("idle");
           return;
         }
 
+        setConfirmationSent(result.sentConfirmation);
         setPhase("done");
-        toast.success("You're on the list. Check your inbox for confirmation.");
+        if (result.sentConfirmation) {
+          toast.success("You're on the list. Check your inbox for confirmation.");
+        } else {
+          toast.success("You're on the list.", {
+            description:
+              "We couldn't send the confirmation email yet. You're still registered — check back soon.",
+          });
+        }
       } catch {
         toast.error("We couldn't submit that email. Double-check it and retry.");
         setPhase("idle");
@@ -62,15 +79,27 @@ export function WaitlistForm() {
             </div>
           </div>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            We've reserved your spot for early access and sent confirmation to{" "}
-            <span className="text-foreground/95 font-medium">{email}</span>. If nothing arrives
-            shortly, check spam. We'd hate for you to miss it.
+            {confirmationSent ? (
+              <>
+                We've reserved your spot for early access and sent confirmation to{" "}
+                <span className="text-foreground/95 font-medium">{email}</span>. If nothing
+                arrives shortly, check spam. We'd hate for you to miss it.
+              </>
+            ) : (
+              <>
+                You're registered for early access as{" "}
+                <span className="text-foreground/95 font-medium">{email}</span>. If you don't get a
+                confirmation email, our sending setup may still be finishing — you're still on the
+                list.
+              </>
+            )}
           </p>
           <button
             type="button"
             onClick={() => {
               setEmail("");
               setPhase("idle");
+              setConfirmationSent(true);
             }}
             className="mt-1 text-xs font-mono uppercase tracking-[0.2em] text-ice underline-offset-4 hover:text-ice/85 hover:underline"
           >

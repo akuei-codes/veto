@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 import { resolveSiteUrl } from "./email-utils";
+import { listMissingSupabaseEnv, resolveSupabaseProjectUrl, resolveSupabaseServiceRoleKey } from "./supabase-env";
 import {
   getWaitlistWelcomeSubject,
   renderWaitlistWelcomeHtml,
@@ -16,7 +17,12 @@ const waitlistInput = z.object({
     .pipe(z.string().email()),
 });
 
-export type JoinWaitlistResult = { ok: true } | { ok: false; code: "unavailable" };
+export type JoinWaitlistResult =
+  | { ok: true; sentConfirmation: boolean }
+  /** Supabase URL / service role not present at runtime (check Vercel env + Preview vs Production). */
+  | { ok: false; code: "missing_env"; missing: ("SUPABASE_URL" | "SUPABASE_SERVICE_ROLE_KEY")[] }
+  /** Supabase insert failed — table missing, wrong URL/key, or RLS (use service role key). */
+  | { ok: false; code: "save_failed" };
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -42,33 +48,38 @@ async function sendWithBackoff<T>(fn: () => Promise<T>, attempts = 4): Promise<T
 export const joinWaitlist = createServerFn({ method: "POST" })
   .inputValidator(waitlistInput)
   .handler(async ({ data }): Promise<JoinWaitlistResult> => {
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    const resendApiKey = process.env.RESEND_API_KEY;
-    const fromEmail = process.env.WAITLIST_FROM_EMAIL;
+    const supabaseUrl = resolveSupabaseProjectUrl();
+    const supabaseServiceKey = resolveSupabaseServiceRoleKey();
+    const resendApiKey = process.env["RESEND_API_KEY"];
+    const fromEmail = process.env["WAITLIST_FROM_EMAIL"];
 
-    if (
-      typeof supabaseUrl !== "string" ||
-      typeof supabaseServiceKey !== "string" ||
-      typeof resendApiKey !== "string" ||
-      typeof fromEmail !== "string" ||
-      !supabaseUrl.trim() ||
-      !supabaseServiceKey.trim() ||
-      !resendApiKey.trim() ||
-      !fromEmail.trim()
-    ) {
+    const emailConfigured =
+      typeof resendApiKey === "string" &&
+      typeof fromEmail === "string" &&
+      resendApiKey.trim().length > 0 &&
+      fromEmail.trim().length > 0;
+
+    if (!supabaseUrl || !supabaseServiceKey) {
+      const missing = listMissingSupabaseEnv();
       console.error(
-        "[waitlist] Missing required server environment variables for waitlist signup.",
+        "[waitlist] Missing Supabase env at runtime — cannot store signup. Missing:",
+        missing.join(", "),
+        "| VERCEL=",
+        process.env["VERCEL"] ?? "(unset)",
+        "| If vars exist in Vercel, confirm they apply to this deployment (Production vs Preview) and redeploy.",
       );
-      return { ok: false, code: "unavailable" };
+      return { ok: false, code: "missing_env", missing };
     }
 
-    const [{ createClient }, { Resend }] = await Promise.all([
-      import("@supabase/supabase-js"),
-      import("resend"),
-    ]);
+    if (!emailConfigured) {
+      console.error(
+        "[waitlist] Missing RESEND_API_KEY or WAITLIST_FROM_EMAIL — signup will be stored but no confirmation email will be sent. Add both in Vercel → Settings → Environment Variables and redeploy.",
+      );
+    }
 
-    const supabase = createClient(supabaseUrl.trim(), supabaseServiceKey.trim(), {
+    const { createClient } = await import("@supabase/supabase-js");
+
+    const supabase = createClient(supabaseUrl, supabaseServiceKey, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
 
@@ -82,8 +93,13 @@ export const joinWaitlist = createServerFn({ method: "POST" })
         insertError.message.toLowerCase().includes("duplicate"));
 
     if (insertError && !isDuplicate) {
-      console.error("[waitlist] Supabase insert failed:", insertError.message);
-      return { ok: false, code: "unavailable" };
+      console.error("[waitlist] Supabase insert failed:", {
+        message: insertError.message,
+        code: insertError.code,
+        details: insertError.details,
+        hint: insertError.hint,
+      });
+      return { ok: false, code: "save_failed" };
     }
 
     /** Always send confirmation — duplicates skipped DB insert but users still expect mail (retests, missed inbox). */
@@ -91,11 +107,13 @@ export const joinWaitlist = createServerFn({ method: "POST" })
       typeof process.env.WAITLIST_SKIP_EMAIL_ON_DUPLICATE === "string" &&
       process.env.WAITLIST_SKIP_EMAIL_ON_DUPLICATE.trim().toLowerCase() === "true";
 
-    const shouldSendEmail = !insertError || (isDuplicate && !skipEmailOnDuplicate);
+    const shouldSendEmail =
+      emailConfigured && (!insertError || (isDuplicate && !skipEmailOnDuplicate));
 
     if (shouldSendEmail) {
-      const resend = new Resend(resendApiKey.trim());
-      const from = fromEmail.trim();
+      const { Resend } = await import("resend");
+      const resend = new Resend(resendApiKey!.trim());
+      const from = fromEmail!.trim();
       const replyTo =
         typeof process.env.WAITLIST_REPLY_TO_EMAIL === "string" &&
         process.env.WAITLIST_REPLY_TO_EMAIL.trim()
@@ -110,6 +128,7 @@ export const joinWaitlist = createServerFn({ method: "POST" })
       const html = renderWaitlistWelcomeHtml(siteUrl);
       const text = renderWaitlistWelcomePlainText(siteUrl);
 
+      let sentConfirmation = false;
       try {
         await sendWithBackoff(async () => {
           const { data: sent, error: emailError } = await resend.emails.send({
@@ -139,12 +158,14 @@ export const joinWaitlist = createServerFn({ method: "POST" })
           if (sent?.id) {
             console.info(`[waitlist] Resend accepted id=${sent.id} to=${data.email}`);
           }
+          sentConfirmation = true;
         });
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         console.error("[waitlist] Resend send failed after retries:", msg);
       }
+      return { ok: true, sentConfirmation };
     }
 
-    return { ok: true };
+    return { ok: true, sentConfirmation: false };
   });
