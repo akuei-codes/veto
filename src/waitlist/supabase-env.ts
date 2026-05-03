@@ -14,10 +14,23 @@ function envTrim(key: string): string | undefined {
 const URL_KEYS = ["SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_URL", "VITE_SUPABASE_URL"] as const;
 const SERVICE_ROLE_KEYS = ["SUPABASE_SERVICE_ROLE_KEY"] as const;
 
+/**
+ * Project URL only: `https://<ref>.supabase.co` — no `/rest/v1` (the client appends that).
+ * Pasting the full REST URL causes PostgREST `PGRST125` "Invalid path specified in request URL".
+ */
+export function normalizeSupabaseProjectUrl(raw: string): string {
+  let u = raw.trim().replace(/\/+$/, "");
+  const restIdx = u.search(/\/rest\/v\d+/i);
+  if (restIdx !== -1) {
+    u = u.slice(0, restIdx);
+  }
+  return u.replace(/\/+$/, "");
+}
+
 export function resolveSupabaseProjectUrl(): string | undefined {
   for (const key of URL_KEYS) {
     const v = envTrim(key);
-    if (v) return v;
+    if (v) return normalizeSupabaseProjectUrl(v);
   }
   return undefined;
 }

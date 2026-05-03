@@ -34,6 +34,11 @@ export function WaitlistForm() {
                 description:
                   "In Supabase → SQL Editor, run the migration that creates public.waitlist_signups (see supabase/migrations in the repo), then try again.",
               });
+            } else if (result.reason === "invalid_project_url") {
+              toast.error("Supabase URL is misconfigured.", {
+                description:
+                  "Set SUPABASE_URL to the project base only, e.g. https://xxxxx.supabase.co — do not include /rest/v1. Then redeploy.",
+              });
             } else if (result.reason === "database_access") {
               toast.error("We couldn't save your signup.", {
                 description:

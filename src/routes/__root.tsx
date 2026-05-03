@@ -45,31 +45,31 @@ export const Route = createRootRoute({
       meta: [
         { charSet: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
-        { title: "Veto — The firewall for AI agents" },
+        { title: "Veto — Real-time semantic decision layer for AI actions" },
         {
           name: "description",
           content:
-            "Veto sits between every AI agent decision and every real-world action — intercepting, scoring, and blocking risky behavior before it executes.",
+            "Veto decides whether an AI action should exist at all — interpreting intent, simulating consequence, and intercepting executions before they reach production systems.",
         },
         { name: "author", content: "Veto" },
-        { property: "og:title", content: "Veto — The firewall for AI agents" },
+        { property: "og:title", content: "Veto — Semantic infrastructure for autonomous execution" },
         {
           property: "og:description",
           content:
-            "Observability tells you what went wrong. Veto stops it from happening. Built for LangChain, AutoGen, CrewAI, and OpenAI Assistants.",
+            "Not budget limits or output filters — a predictive decision engine that ghosts blast radius across your stack. Framework-agnostic, sub-50ms verdict plane.",
         },
         { property: "og:type", content: "website" },
         { property: "og:image", content: ogImageUrl() },
         { property: "og:image:type", content: "image/png" },
-        { property: "og:image:alt", content: "Veto — runtime firewall for AI agents" },
+        { property: "og:image:alt", content: "Veto — real-time interception of AI execution" },
         ...(origin ? ([{ property: "og:url", content: origin }] as const) : []),
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:image", content: ogImageUrl() },
-        { name: "twitter:title", content: "Veto — The firewall for AI agents" },
+        { name: "twitter:title", content: "Veto — Should this AI action exist?" },
         {
           name: "twitter:description",
           content:
-            "Intercept, score, and block risky AI agent actions before they execute. < 50ms overhead.",
+            "Semantic decision infrastructure: simulate consequence, trace blast graph, halt execution — before irreversible commits land.",
         },
       ],
       links: [

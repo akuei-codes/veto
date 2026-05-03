@@ -207,4 +207,21 @@
     62% { transform: scale(1.06) rotate(4deg); opacity: 1; }
     100% { transform: scale(1) rotate(0deg); opacity: 1; }
   }
+
+  @keyframes infra-pan-slow {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+  .animate-infra-pan-slow {
+    animation: infra-pan-slow 24s linear infinite;
+  }
+
+  @keyframes packet-rise {
+    0% { transform: translateY(100%) translateX(0); opacity: 0; }
+    12% { opacity: 0.45; }
+    100% { transform: translateY(-120%) translateX(8px); opacity: 0; }
+  }
+  .animate-packet-rise {
+    animation: packet-rise 14s ease-in infinite;
+  }
 }

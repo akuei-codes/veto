@@ -1,6 +1,10 @@
 import type { PostgrestError } from "@supabase/supabase-js";
 
-export type SaveFailedReason = "migration_required" | "database_access" | "unknown";
+export type SaveFailedReason =
+  | "migration_required"
+  | "database_access"
+  | "invalid_project_url"
+  | "unknown";
 
 /** Map Supabase/PostgREST insert errors to an actionable category (no secrets in output). */
 export function classifyInsertError(error: PostgrestError | null | undefined): SaveFailedReason {
@@ -8,6 +12,11 @@ export function classifyInsertError(error: PostgrestError | null | undefined): S
 
   const code = error.code ?? "";
   const msg = `${error.message ?? ""} ${error.details ?? ""} ${error.hint ?? ""}`.toLowerCase();
+
+  /** Base URL must not include `/rest/v1` — supabase-js adds that. */
+  if (code === "PGRST125" || msg.includes("invalid path")) {
+    return "invalid_project_url";
+  }
 
   if (
     code === "42P01" ||

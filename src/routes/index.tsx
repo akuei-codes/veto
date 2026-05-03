@@ -1,8 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 
+import { DecisionMomentDemo } from "@/components/veto/DecisionMomentDemo";
 import { LiveInterceptor } from "@/components/veto/LiveInterceptor";
 import { IncidentsSection } from "@/components/veto/Incidents";
+import { RiskGraphViz } from "@/components/veto/RiskGraphViz";
+import {
+  ActionIntelligenceStrip,
+  DifferentiationMatrix,
+  GhostExecutionPreview,
+  MemoryMoatPanel,
+} from "@/components/veto/VetoPillars";
 import { WaitlistForm } from "@/components/veto/WaitlistForm";
 
 export const Route = createFileRoute("/")({
@@ -12,18 +20,28 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <main className="relative min-h-screen overflow-hidden">
-      <div className="absolute inset-0 grid-bg pointer-events-none mask-[linear-gradient(to_bottom,black_62%,transparent_100%)]" />
+      <div className="absolute inset-0 grid-bg pointer-events-none mask-[linear-gradient(to_bottom,black_58%,transparent_100%)]" />
+
+      <AmbientPacketField />
 
       {/* Layered ambience */}
-      <div className="pointer-events-none absolute -top-[34%] left-1/2 h-[min(88vh,800px)] w-[min(128vw,1280px)] -translate-x-1/2 bg-[radial-gradient(ellipse_at_center,color-mix(in_oklab,var(--ice)_26%,transparent),transparent_64%)] opacity-95 blur-[100px]" />
-      <div className="pointer-events-none absolute top-[22%] -right-[20%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--signal)_32%,transparent),transparent_70%)] blur-3xl opacity-80" />
-      <div className="pointer-events-none absolute bottom-[-12%] left-[-14%] h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--signal)_14%,transparent),transparent_68%)] blur-3xl opacity-65" />
+      <div className="pointer-events-none absolute -top-[34%] left-1/2 h-[min(88vh,800px)] w-[min(128vw,1280px)] -translate-x-1/2 bg-[radial-gradient(ellipse_at_center,color-mix(in_oklab,var(--ice)_22%,transparent),transparent_64%)] opacity-90 blur-[100px]" />
+      <div className="pointer-events-none absolute top-[22%] -right-[20%] h-[460px] w-[460px] rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--signal)_28%,transparent),transparent_70%)] blur-3xl opacity-75" />
+      <div className="pointer-events-none absolute bottom-[-12%] left-[-14%] h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--signal)_12%,transparent),transparent_68%)] blur-3xl opacity-55" />
 
       <div className="relative">
         <Header />
         <Hero />
+        <section className="relative mx-auto max-w-6xl px-6 pb-6 sm:pb-10" id="moment">
+          <DecisionMomentDemo />
+        </section>
         <IncidentsSection />
-        <ProductSection />
+        <SimulationAndIntelligenceSection />
+        <RiskGraphSection />
+        <DifferentiationSection />
+        <MemoryMoatSection />
+        <AmbientInterceptorSection />
+        <EnginesSection />
         <TrustLine />
         <CTASection />
         <Footer />
@@ -32,9 +50,28 @@ function Index() {
   );
 }
 
+/** Subtle vertical “packet” motion — always-on infrastructure feel. */
+function AmbientPacketField() {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-[0.55]" aria-hidden>
+      {Array.from({ length: 22 }).map((_, i) => (
+        <span
+          key={i}
+          className="absolute bottom-0 h-4 w-px animate-packet-rise rounded-full bg-gradient-to-t from-transparent via-signal/40 to-transparent"
+          style={{
+            left: `${4 + (i * 4.3) % 92}%`,
+            animationDelay: `${i * 0.62}s`,
+            animationDuration: `${12 + (i % 5) * 2.2}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-border/50 bg-background/68 backdrop-blur-xl supports-[backdrop-filter]:backdrop-saturate-150">
+    <header className="sticky top-0 z-50 border-b border-border/50 bg-background/72 backdrop-blur-xl supports-[backdrop-filter]:backdrop-saturate-150">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         <Link to="/" className="group flex items-center gap-3">
           <Logo />
@@ -42,7 +79,7 @@ function Header() {
             Veto
           </span>
           <span className="hidden font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/80 sm:inline">
-            Firewall
+            Decision layer
           </span>
         </Link>
         <a
@@ -74,7 +111,7 @@ function Logo() {
 
 function Hero() {
   return (
-    <section className="relative mx-auto max-w-6xl px-6 pb-16 pt-24 sm:pb-20 sm:pt-32 lg:pb-28">
+    <section className="relative mx-auto max-w-6xl px-6 pb-12 pt-20 sm:pb-16 sm:pt-28 lg:pb-20">
       <div className="relative z-[1] flex justify-center pb-10">
         <div className="inline-flex items-center gap-3 rounded-full border border-border/80 bg-gradient-to-r from-card/92 via-background/76 to-background/92 px-4 py-1.5 text-xs shadow-[0_0_0_1px_color-mix(in_oklab,var(--ice)_18%,transparent)] backdrop-blur-md">
           <span className="relative flex h-2 w-2">
@@ -82,32 +119,34 @@ function Hero() {
             <span className="relative inline-flex h-2 w-2 rounded-full bg-signal" />
           </span>
           <span className="font-mono tracking-wide text-muted-foreground">
-            Live runtime firewall · <span className="text-foreground/95">&lt;50ms</span> verdicts
+            Semantic interception ·{" "}
+            <span className="text-foreground/95">&lt;50ms</span> verdict plane
           </span>
         </div>
       </div>
 
-      <div className="relative z-[1] mx-auto max-w-[1100px] text-center">
+      <div className="relative z-[1] mx-auto max-w-[1180px] text-center">
         <h1 className="font-bold leading-[1.02] tracking-[-0.045em] text-5xl sm:text-7xl lg:text-[5.125rem]">
-          The firewall{" "}
-          <span className="sm:whitespace-nowrap">
-            <br className="sm:hidden" />
-            <span className="relative inline-flex flex-col items-center gap-3 sm:inline-flex sm:flex-row sm:items-end sm:gap-4">
-              <span className="veto-heading-shimmer pb-1">for AI agents.</span>
-            </span>
-          </span>
+          Decide{" "}
+          <span className="veto-heading-shimmer pb-1">whether an AI action exists</span>
+          <br className="hidden sm:block" />
+          <span className="text-muted-foreground sm:whitespace-nowrap">before it touches your systems.</span>
         </h1>
 
         <p className="mx-auto mt-10 max-w-3xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
-          Observability tells you what went wrong.{" "}
-          <span className="font-medium text-foreground">
-            Veto stops it before the damage lands.
-          </span>
+          Veto is the{" "}
+          <span className="font-medium text-foreground">real-time semantic decision engine</span> that
+          reads intent, simulates downstream consequence, and blocks execution when the blast radius does
+          not belong in production.
         </p>
 
-        <p className="mx-auto mt-7 max-w-2xl text-base leading-relaxed text-muted-foreground/95">
-          A precision layer between autonomous decisions and real infrastructure, intercepting tool
-          calls, scoring irreversible blast radius, and blocking the ones that shouldn't execute.
+        <p className="mx-auto mt-6 max-w-2xl border-y border-white/[0.06] py-6 text-[0.95rem] leading-relaxed text-muted-foreground/95">
+          Infrastructure, not tooling.{" "}
+          <span className="text-foreground">
+            Not budget caps. Not brittle filters after the thought.{" "}
+          </span>
+          Pre-execution understanding of what{' '}
+          <span className="italic text-ice/95">would</span> happen — wired into the action path itself.
         </p>
       </div>
 
@@ -115,10 +154,104 @@ function Hero() {
         <WaitlistForm />
       </div>
 
-      <div className="relative z-[1] mt-[5.5rem] sm:mt-28 lg:mt-32">
+      <p className="relative z-[1] mx-auto mt-10 max-w-lg text-center font-mono text-[10px] uppercase tracking-[0.26em] text-muted-foreground/85">
+        <a href="#moment" className="text-ice/90 underline-offset-4 hover:underline">
+          See the interception
+        </a>{" "}
+        · deterministic halt · lineage export
+      </p>
+    </section>
+  );
+}
+
+function SimulationAndIntelligenceSection() {
+  return (
+    <section className="border-t border-border/55 bg-surface/[0.12]">
+      <div className="mx-auto max-w-6xl px-6 py-24 sm:py-28">
+        <div className="max-w-3xl">
+          <div className="font-mono text-xs uppercase tracking-[0.35em] text-ice mb-6">
+            Simulation layer
+          </div>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-5xl lg:text-[3.125rem]">
+            Predictive substrate.
+            <span className="text-muted-foreground"> Not reactive dashboarding.</span>
+          </h2>
+          <p className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-2xl">
+            Ghost system state deltas, divergence from stated intent, and historical parallels — then sit
+            in the narrow window between autonomous proposal and immutable execution.
+          </p>
+        </div>
+
+        <div className="mt-14 space-y-12">
+          <ActionIntelligenceStrip />
+          <GhostExecutionPreview />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function RiskGraphSection() {
+  return (
+    <section className="border-t border-border/55">
+      <div className="mx-auto max-w-6xl px-6 py-24 sm:py-28">
+        <RiskGraphViz />
+      </div>
+    </section>
+  );
+}
+
+function DifferentiationSection() {
+  return (
+    <section className="border-t border-border/55 bg-surface/[0.08]">
+      <div className="mx-auto max-w-6xl px-6 py-24 sm:py-28">
+        <div className="max-w-3xl mb-12">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-[2.85rem]">
+            No confusion with controllers that only ration work.
+          </h2>
+          <p className="mt-5 text-muted-foreground text-lg leading-relaxed">
+            Agents need an inevitable layer that answers a different question:{" "}
+            <span className="text-foreground font-medium">
+              should this action be allowed to exist at all?
+            </span>
+          </p>
+        </div>
+        <DifferentiationMatrix />
+      </div>
+    </section>
+  );
+}
+
+function MemoryMoatSection() {
+  return (
+    <section className="border-t border-border/55">
+      <div className="mx-auto max-w-6xl px-6 py-24 sm:py-28">
+        <MemoryMoatPanel />
+      </div>
+    </section>
+  );
+}
+
+function AmbientInterceptorSection() {
+  return (
+    <section className="border-t border-border/55">
+      <div className="mx-auto max-w-6xl px-6 py-24 sm:py-28">
+        <div className="max-w-3xl mb-14">
+          <div className="font-mono text-xs uppercase tracking-[0.34em] text-signal mb-5">
+            Always-on plane
+          </div>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-5xl">
+            Watching the seams where agents touch reality.
+          </h2>
+          <p className="mt-5 text-muted-foreground text-lg leading-relaxed">
+            Thousands of microscopic decisions per hour — surfaced as ambient traffic across your stack.
+            The goal is parity with how packet switches feel invisible until they aren’t.
+          </p>
+        </div>
+
         <div className="relative">
-          <div className="pointer-events-none absolute -inset-3 rounded-[1.85rem] bg-gradient-to-b from-signal/[0.15] via-transparent to-ice/[0.08] blur-2xl opacity-90" />
-          <div className="relative rounded-2xl p-[1px] bg-gradient-to-br from-white/18 via-transparent to-ice/[0.22]">
+          <div className="pointer-events-none absolute -inset-3 rounded-[1.85rem] bg-gradient-to-b from-signal/[0.14] via-transparent to-ice/[0.08] blur-2xl opacity-85" />
+          <div className="relative rounded-2xl bg-gradient-to-br from-white/[0.14] via-transparent to-ice/[0.22] p-px">
             <LiveInterceptor />
           </div>
         </div>
@@ -127,115 +260,54 @@ function Hero() {
   );
 }
 
-function ProductSection() {
-  const dimensions = [
-    "Destructiveness",
-    "Blast radius",
-    "Reversibility",
-    "Behavioral deviation",
-    "Chain coherence",
+function EnginesSection() {
+  const axes = [
+    {
+      title: "Consequence depth",
+      body: "What breaks, forks, bills, or erases if this succeeds verbatim.",
+    },
+    {
+      title: "Historical twins",
+      body: "Match against corpus of verdicts across orgs — not generic internet priors.",
+    },
+    {
+      title: "Intent coherence",
+      body: "Stated operator goal versus observed execution morphology.",
+    },
+    {
+      title: "Irreversibility horizon",
+      body: "Time-to-recover envelopes with dependency graph amplification.",
+    },
+    {
+      title: "Propagated blast",
+      body: "Multi-hop causal edges through DB, payouts, egress, IAM, telemetry.",
+    },
   ];
 
-  const card =
-    "relative overflow-hidden rounded-2xl border border-border/65 bg-gradient-to-br from-card/94 via-background/74 to-background/96 p-[1px] shadow-[0_42px_100px_-48px_color-mix(in_oklab,var(--signal)_52%,transparent)]";
-
-  const cardInner = "h-full rounded-[calc(1rem-1px)] bg-surface/55 p-7 backdrop-blur-sm sm:p-8";
-
   return (
-    <section className="border-t border-border/55">
-      <div className="mx-auto max-w-6xl px-6 py-24 sm:py-32">
-        <div className="font-mono text-xs uppercase tracking-[0.35em] text-ice mb-8">
-          Architecture
-        </div>
+    <section className="border-t border-border/55 bg-surface/[0.1]">
+      <div className="mx-auto max-w-6xl px-6 py-24 sm:py-28">
+        <div className="font-mono text-xs uppercase tracking-[0.34em] text-ice mb-6">Engines</div>
         <h2 className="max-w-3xl text-3xl font-bold tracking-tight sm:text-5xl lg:text-[3.125rem]">
-          Intercept every tool call.
-          <span className="text-muted-foreground">
-            {" "}
-            Decide before it's too  late.
-          </span>
+          Everything routes through verdict before commit.
         </h2>
 
-        <div className="mt-16 grid gap-6 lg:grid-cols-5">
-          <div className={card + " lg:col-span-3"}>
-            <div className={cardInner}>
-              <div className="pointer-events-none absolute right-[-18%] top-[-32%] h-56 w-56 rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--signal)_38%,transparent),transparent_74%)] opacity-65 blur-3xl" />
-              <div className="relative text-xs font-mono uppercase tracking-wider text-muted-foreground">
-                Risk scored across five dimensions
-              </div>
-              <ul className="relative mt-7 space-y-4">
-                {dimensions.map((d, i) => (
-                  <li key={d} className="flex items-center gap-5">
-                    <span className="w-10 font-mono text-xs text-ice">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className="text-xl font-semibold tracking-tight sm:text-[1.35rem]">
-                      {d}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className={card + " lg:col-span-2"}>
-            <div className={cardInner}>
-              <div className="pointer-events-none absolute -bottom-28 left-[-20%] h-52 w-[130%] bg-[radial-gradient(ellipse_at_center,color-mix(in_oklab,var(--ice)_26%,transparent),transparent_74%)] opacity-55 blur-[90px]" />
-              <div className="relative text-xs font-mono uppercase tracking-wider text-muted-foreground">
-                Structured verdict
-              </div>
-              <div className="relative mt-7 space-y-3 font-mono text-sm">
-                <VerdictRow tone="signal" label="ALLOW" desc="instant execution path" />
-                <VerdictRow tone="warn" label="ESCALATE" desc="human-in-the-loop" />
-                <VerdictRow tone="block" label="BLOCK" desc="immutable halt" />
-              </div>
-            </div>
-          </div>
-
-          <div className={card + " lg:col-span-5"}>
-            <div className={cardInner + " sm:p-10"}>
-              <div className="relative max-w-none">
-                <p className="text-lg leading-relaxed text-foreground/90 sm:text-xl">
-                  Risky executions surface as a distilled incident card with chain-of-thought
-                  lineage, target systems, and blast radius deltas. Humans approve once; Veto
-                  learns the pattern protects the rest.
-                </p>
-                <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-                  Structured audit trails stay export-ready{" "}
-                  <span className="font-semibold text-foreground">
-                    without slowing shipping velocity.
-                  </span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ul className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+          {axes.map((a, i) => (
+            <li
+              key={a.title}
+              className="group relative rounded-2xl border border-border/60 bg-gradient-to-b from-card/90 to-background/80 p-6 shadow-[0_42px_100px_-58px_color-mix(in_oklab,var(--signal)_38%,transparent)] transition-colors hover:border-ice/30"
+            >
+              <span className="font-mono text-[10px] text-ice/85 tabular-nums">
+                {(i + 1).toString().padStart(2, "0")}
+              </span>
+              <div className="mt-4 text-lg font-semibold tracking-tight">{a.title}</div>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{a.body}</p>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
-  );
-}
-
-function VerdictRow({
-  tone,
-  label,
-  desc,
-}: {
-  tone: "signal" | "warn" | "block";
-  label: string;
-  desc: string;
-}) {
-  const cls =
-    tone === "signal"
-      ? "border-signal/45 bg-gradient-to-br from-signal/[0.12] to-transparent text-signal"
-      : tone === "warn"
-        ? "border-warn/45 bg-gradient-to-br from-warn/[0.12] to-transparent text-warn"
-        : "border-block/45 bg-gradient-to-br from-block/[0.12] to-transparent text-block";
-  return (
-    <div
-      className={`flex flex-col gap-1 rounded-xl border px-4 py-3 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-between ${cls}`}
-    >
-      <span className="font-semibold tracking-[0.2em]">{label}</span>
-      <span className="text-xs text-muted-foreground">{desc}</span>
-    </div>
   );
 }
 
@@ -246,7 +318,7 @@ function TrustLine() {
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,color-mix(in_oklab,var(--ice)_14%,transparent),transparent,color-mix(in_oklab,var(--signal)_13%,transparent))] opacity-[0.13]" />
       <div className="relative mx-auto max-w-6xl px-6 py-20 text-center sm:py-24">
         <div className="font-mono text-xs uppercase tracking-[0.34em] text-muted-foreground">
-          Framework-agnostic
+          Drops into any orchestration substrate
         </div>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
           {frameworks.map((f) => (
@@ -259,8 +331,8 @@ function TrustLine() {
           ))}
         </div>
         <p className="mx-auto mt-9 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-          Drop-in guards for whichever orchestration runtime you shipped last quarter. Pure HTTP
-          edge; your agents stay exactly where they are.
+          HTTP-native decision plane · your autonomy graph stays untouched · wire once, inherit cross-runtime
+          protection.
         </p>
       </div>
     </section>
@@ -270,30 +342,29 @@ function TrustLine() {
 function CTASection() {
   return (
     <section className="relative overflow-hidden border-t border-border/45">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,color-mix(in_oklab,var(--signal)_26%,transparent),transparent_62%)]" />
-      <div className="pointer-events-none absolute -bottom-[36%] left-1/2 h-[460px] w-[1100px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--ice)_38%,transparent),transparent_74%)] opacity-85 blur-[120px]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,color-mix(in_oklab,var(--signal)_22%,transparent),transparent_62%)]" />
+      <div className="pointer-events-none absolute -bottom-[36%] left-1/2 h-[460px] w-[1100px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--ice)_34%,transparent),transparent_74%)] opacity-80 blur-[120px]" />
       <div className="relative mx-auto max-w-3xl px-6 py-28 text-center sm:py-36">
-        <h2 className="text-4xl font-bold tracking-tight sm:text-[3.95rem] sm:leading-[1.04]">
-          One autonomous slip
+        <h2 className="text-4xl font-bold tracking-tight sm:text-[3.75rem] sm:leading-[1.05]">
+          How teams ship agents{" "}
+          <span className="text-muted-foreground">without</span>
           <br />
-          <span className="text-signal drop-shadow-[0_0_50px_color-mix(in_oklab,var(--signal)_48%,transparent)]">
-            Away from outage.
-          </span>
+          this layer is shrinking.
         </h2>
         <p className="mx-auto mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground">
-          We&apos;re onboarding design partners who want ruthless runtime guarantees without trading
-          away agent velocity, say hello and we&apos;ll slot you intentionally.
+          We onboard design partners deliberately — runtime guarantees without trading away velocity. If your
+          production agents execute anything irreversible, you already know why this belongs in the substrate.
         </p>
         <div className="mt-14">
           <a
             href="#early-access"
-            className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border border-transparent bg-gradient-to-r from-signal via-emerald-300 to-ice px-12 py-4 text-[0.9375rem] font-semibold uppercase tracking-[0.14em] text-signal-foreground shadow-[inset_0_1px_0_0_color-mix(in_oklab,var(--foreground)_24%,transparent),0_0_48px_-10px_color-mix(in_oklab,var(--signal)_58%,transparent)] transition-[transform,box-shadow] hover:scale-[1.03] hover:shadow-[0_0_60px_-6px_color-mix(in_oklab,var(--signal)_68%,transparent)] active:scale-[0.985]"
+            className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border border-transparent bg-gradient-to-r from-signal via-emerald-300 to-ice px-11 py-4 text-[0.9375rem] font-semibold uppercase tracking-[0.14em] text-signal-foreground shadow-[inset_0_1px_0_0_color-mix(in_oklab,var(--foreground)_24%,transparent),0_0_48px_-10px_color-mix(in_oklab,var(--signal)_58%,transparent)] transition-[transform,box-shadow] hover:scale-[1.03] hover:shadow-[0_0_60px_-6px_color-mix(in_oklab,var(--signal)_68%,transparent)] active:scale-[0.985]"
           >
-            <span className="relative z-[1]">Join the firewall waitlist</span>
+            <span className="relative z-[1]">Request foundational access</span>
             <span className="absolute inset-x-[-40%] h-full skew-x-12 bg-gradient-to-r from-transparent via-white/22 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
           </a>
           <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground/90">
-            Direct line to founders · No automated nurture noise
+            Direct founders · prioritized queue
           </p>
         </div>
       </div>
@@ -305,16 +376,16 @@ function Footer() {
   return (
     <footer className="border-t border-border/50">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-5 px-6 py-11 text-sm text-muted-foreground sm:flex-row">
-        <Link to="/" className="group flex items-center gap-2.5">
+        <Link to="/" className="group flex flex-wrap items-center justify-center gap-2.5 sm:justify-start">
           <Logo />
           <span className="font-semibold text-foreground transition-colors group-hover:text-foreground/90">
             Veto
           </span>
-          <span className="font-mono text-xs">production AI runtime shield</span>
+          <span className="font-mono text-xs text-center sm:text-start">
+            Semantic decision substrate for autonomous execution
+          </span>
         </Link>
-        <span className="font-mono text-[11px] tracking-wide">
-          © {new Date().getFullYear()} Veto
-        </span>
+        <span className="font-mono text-[11px] tracking-wide">© {new Date().getFullYear()} veto.ink</span>
       </div>
     </footer>
   );

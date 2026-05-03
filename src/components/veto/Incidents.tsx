@@ -87,7 +87,8 @@ export function IncidentsSection() {
         </div>
 
         <p className="mt-10 text-sm text-muted-foreground font-mono">
-          Every one of these would have hit a Veto verdict before reaching production.
+          Each case is a class of action Veto is designed to dissolve in the pre-commit window — before
+          semantics become outages.
         </p>
       </div>
     </section>

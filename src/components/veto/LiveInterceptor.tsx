@@ -55,7 +55,7 @@ export function LiveInterceptor() {
         <div className="flex items-center gap-2">
           <span className="h-2 w-2 rounded-full bg-signal animate-pulse-dot" />
           <span className="font-mono text-xs uppercase tracking-[0.2em] text-signal">
-            Live · intercepting
+            Live · semantic plane
           </span>
         </div>
         <div className="hidden sm:flex items-center gap-4 font-mono text-xs">
@@ -142,9 +142,9 @@ export function LiveInterceptor() {
       {/* Footer */}
       <div className="px-5 py-3 border-t border-border/60 bg-surface-elevated/40 flex flex-wrap items-center justify-between gap-2 text-xs">
         <span className="text-muted-foreground font-mono">
-          Three lines of code. Fully instrumented. Framework-agnostic.
+          Verdict before commit · consequence-aware · framework-agnostic wire-in
         </span>
-        <span className="font-mono text-signal">avg verdict latency 38ms</span>
+        <span className="font-mono text-signal">p50 semantic trace 38ms</span>
       </div>
     </div>
   );
