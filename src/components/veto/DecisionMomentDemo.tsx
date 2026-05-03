@@ -7,7 +7,7 @@ const ACTION_RAW = `DELETE FROM users WHERE last_seen_at < NOW() - INTERVAL '400
 const INTENT_LABEL = '"clean dormant accounts"';
 
 const UNDERSTOOD =
-  "This removes 12,481 user rows — including 2,104 with active subscriptions and Stripe billing primitives. Postgres MVCC blocks concurrent reads briefly; cascading deletes propagate to audits and sessions. Estimated blast radius 8 systems.";
+  "This query would have permanently deleted 12,481 user rows — including 2,104 with active subscriptions and live Stripe billing artifacts. MVCC would stall concurrent readers; cascades would tear through audits, sessions, and downstream mirrors. One round-trip from total data loss.";
 
 /** Signature “holy shit” narrative: lethal action intercepted mid-flight, consequence surfaced, verdict. */
 export function DecisionMomentDemo() {
@@ -43,7 +43,7 @@ export function DecisionMomentDemo() {
               Live interception
             </span>
             <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/90">
-              sub-50ms · pre-execution
+              Under 50ms · before Postgres executes
             </span>
           </div>
 
@@ -53,9 +53,11 @@ export function DecisionMomentDemo() {
             <span className="text-block">never does</span>.
           </h3>
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-[0.9375rem]">
-            Not a filter on text. A semantic read on{" "}
-            <span className="text-foreground/95">intent, consequence, and blast radius</span> before
-            bytes hit your systems.
+            In under 50ms,{" "}
+            <span className="text-foreground/95 font-medium">
+              before the database connection accepts the statement
+            </span>
+            , Veto terminates the envelope, explains what would have happened, and issues a verdict.
           </p>
 
           {/* Pipeline */}
@@ -137,8 +139,8 @@ export function DecisionMomentDemo() {
 
                 <div className="rounded-lg border border-border/60 bg-background/50 px-3 py-2.5 font-mono text-[11px] text-muted-foreground">
                   <span className="text-signal/90">Learning layer · </span>
-                  Similar to <span className="text-foreground">37</span> previously blocked destructive
-                  SQL patterns across orgs (avg human override 4.2%)
+                  Structure matches destructive SQL envelopes this org already halted — calibrated to your
+                  live schema graph.
                 </div>
               </div>
             )}
@@ -154,7 +156,7 @@ export function DecisionMomentDemo() {
                       Verdict · Blocked
                     </div>
                     <div className="mt-2 text-xl font-bold tracking-tight text-foreground">
-                      Action halted before execution
+                      Query never reaches the database · halt is final
                     </div>
                     <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 font-mono text-[11px] text-muted-foreground">
                       <span>
@@ -185,7 +187,10 @@ export function DecisionMomentDemo() {
       </div>
 
       <p className="px-6 py-4 text-center font-mono text-[10px] uppercase tracking-[0.26em] text-muted-foreground/85 sm:px-10">
-        This is not budget enforcement · not input filtering · not post-hoc logging
+        Budget tools throttle spend · guardrails skim text · logs narrate outages ·{" "}
+        <span className="text-foreground/90">
+          Veto blocks execution paths before they mutate production
+        </span>
       </p>
     </div>
   );

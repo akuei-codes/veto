@@ -26,11 +26,12 @@ export function RiskGraphViz() {
         <div>
           <div className="font-mono text-[10px] uppercase tracking-[0.32em] text-ice">Risk graph</div>
           <h3 className="mt-2 text-xl font-bold tracking-tight sm:text-2xl">
-            Trace propagation before impact
+            See where one action would have landed
           </h3>
           <p className="mt-2 max-w-md text-sm text-muted-foreground">
-            Not another chart. An interactive consequence map — the path a single action takes
-            across real systems once it clears (or fails) semantic review.
+            Orchestrator → verdict ring → Postgres · mail · payments. Every edge is a system that would
+            move if the action became real. Highlights show the blast envelope Veto resolves before wires
+            run hot.
           </p>
         </div>
         <button

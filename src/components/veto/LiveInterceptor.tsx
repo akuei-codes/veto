@@ -142,9 +142,10 @@ export function LiveInterceptor() {
       {/* Footer */}
       <div className="px-5 py-3 border-t border-border/60 bg-surface-elevated/40 flex flex-wrap items-center justify-between gap-2 text-xs">
         <span className="text-muted-foreground font-mono">
-          Verdict before commit · consequence-aware · framework-agnostic wire-in
+          Every action flows through Veto · every hop is evaluated · production systems never see what is
+          blocked
         </span>
-        <span className="font-mono text-signal">p50 semantic trace 38ms</span>
+        <span className="font-mono text-signal">Median envelope 38ms</span>
       </div>
     </div>
   );

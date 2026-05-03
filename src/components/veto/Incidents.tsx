@@ -74,8 +74,11 @@ export function IncidentsSection() {
             This isn't hypothetical. <span className="text-block">It's already happening.</span>
           </h2>
           <p className="mt-6 text-lg text-muted-foreground max-w-2xl">
-            Production AI agents are shipping today with no runtime constraints. Here's what that's
-            already cost teams in the last year.
+            Agents already issue production database deletes, IAM mutations, outbound mail, shell on real
+            hosts — with no deterministic layer enforcing{" "}
+            <span className="text-foreground font-medium">
+              Every AI action must pass through a decision layer before it becomes reality.
+            </span>
           </p>
         </div>
 
@@ -87,8 +90,8 @@ export function IncidentsSection() {
         </div>
 
         <p className="mt-10 text-sm text-muted-foreground font-mono">
-          Each case is a class of action Veto is designed to dissolve in the pre-commit window — before
-          semantics become outages.
+          Veto prevents these classes of actions from ever reaching the commit point — the query, API
+          call, or message is stopped while it is still in flight.
         </p>
       </div>
     </section>

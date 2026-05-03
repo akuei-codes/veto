@@ -45,18 +45,18 @@ export const Route = createRootRoute({
       meta: [
         { charSet: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
-        { title: "Veto — Real-time semantic decision layer for AI actions" },
+        { title: "Veto — Decision layer between agents and production" },
         {
           name: "description",
           content:
-            "Veto decides whether an AI action should exist at all — interpreting intent, simulating consequence, and intercepting executions before they reach production systems.",
+            "Veto intercepts database queries, API calls, shells, and outbound mail before they execute — every AI action passes through this layer before it becomes reality.",
         },
         { name: "author", content: "Veto" },
-        { property: "og:title", content: "Veto — Semantic infrastructure for autonomous execution" },
+        { property: "og:title", content: "Veto — Agents do not bypass the decision plane" },
         {
           property: "og:description",
           content:
-            "Not budget limits or output filters — a predictive decision engine that ghosts blast radius across your stack. Framework-agnostic, sub-50ms verdict plane.",
+            "Intercept real executions in under 50ms: SQL, REST, SES, Stripe, shell — show what would have happened, then block or authorize. Mandatory infrastructure.",
         },
         { property: "og:type", content: "website" },
         { property: "og:image", content: ogImageUrl() },
@@ -65,11 +65,11 @@ export const Route = createRootRoute({
         ...(origin ? ([{ property: "og:url", content: origin }] as const) : []),
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:image", content: ogImageUrl() },
-        { name: "twitter:title", content: "Veto — Should this AI action exist?" },
+        { name: "twitter:title", content: "Veto — Agents do not bypass the decision plane" },
         {
           name: "twitter:description",
           content:
-            "Semantic decision infrastructure: simulate consequence, trace blast graph, halt execution — before irreversible commits land.",
+            "Intercepts DB, APIs, shells, mail before execution. Shows what would have happened · issues verdict in sub-50ms.",
         },
       ],
       links: [

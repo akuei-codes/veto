@@ -144,7 +144,7 @@ export function WaitlistForm() {
                 Early access
               </div>
               <p className="mt-2 text-sm leading-snug text-muted-foreground">
-                Engineers only. Onboarding is manual once Veto integrates with your runtime.
+                Production environments only · manual onboarding once your execution plane wires in.
               </p>
             </div>
           </div>
@@ -183,7 +183,7 @@ export function WaitlistForm() {
             </Button>
           </div>
           <p className="mt-3.5 px-1 text-center text-[11px] leading-relaxed font-mono text-muted-foreground/85">
-            We never sell addresses. One confirmation message, then only important updates.
+            Veto never resells addresses. One confirmation · then materially important updates only.
           </p>
         </div>
       </div>
