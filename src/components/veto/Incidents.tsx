@@ -75,7 +75,7 @@ export function IncidentsSection() {
           </h2>
           <p className="mt-6 text-lg text-muted-foreground max-w-2xl">
             Agents already issue production database deletes, IAM mutations, outbound mail, shell on real
-            hosts — with no deterministic layer enforcing{" "}
+            hosts, with no deterministic layer enforcing{" "}
             <span className="text-foreground font-medium">
               Every AI action must pass through a decision layer before it becomes reality.
             </span>

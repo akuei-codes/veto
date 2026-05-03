@@ -141,7 +141,7 @@ export function ActionIntelligenceStrip() {
             <div className="font-mono text-[10px] uppercase tracking-wider text-ice">Verdict copy</div>
             <p className="mt-3 text-sm leading-relaxed text-foreground">
               “This would remove <span className="font-semibold text-block">12,481</span> live accounts
-              with active billing — not dormant users. Halting before Postgres receives the statement.”
+              with active billing, not dormant users. Halting before Postgres receives the statement.”
             </p>
           </div>
         </div>
@@ -161,7 +161,7 @@ export function MemoryMoatPanel() {
           </h3>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
             Every halt, override, and near-miss sharpens the envelope for your stack. Small miss rates
-            compound across multi-step workflows — Veto tracks the patterns that actually touch your
+            compound across multi-step workflows. Veto tracks the patterns that actually touch your
             production graph.
           </p>
         </div>

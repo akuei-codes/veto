@@ -224,4 +224,28 @@
   .animate-packet-rise {
     animation: packet-rise 14s ease-in infinite;
   }
+
+  @keyframes veto-core-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .animate-veto-core-spin {
+    animation: veto-core-spin 16s linear infinite;
+  }
+
+  @keyframes hero-path-flow {
+    from { stroke-dashoffset: 0; }
+    to { stroke-dashoffset: -36; }
+  }
+  .animate-hero-path-flow {
+    animation: hero-path-flow 1.85s linear infinite;
+  }
+
+  /** Mini grid overlay for hero execution canvas */
+  .hero-grid-mini {
+    background-image:
+      linear-gradient(to right, color-mix(in oklab, var(--ice) 8%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--ice) 6%, transparent) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
 }

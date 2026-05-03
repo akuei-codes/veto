@@ -12,7 +12,7 @@ import {
   GhostExecutionPreview,
   MemoryMoatPanel,
 } from "@/components/veto/VetoPillars";
-import { WaitlistForm } from "@/components/veto/WaitlistForm";
+import { VetoHeroStage } from "@/components/veto/VetoHeroStage";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -32,7 +32,7 @@ function Index() {
 
       <div className="relative">
         <Header />
-        <Hero />
+        <VetoHeroStage />
         <section className="relative mx-auto max-w-6xl px-6 pb-10 sm:pb-12">
           <DefiningLineStrip />
         </section>
@@ -189,64 +189,11 @@ function RealityGapSection() {
             </ul>
             <p className="mt-10 border-t border-border/50 pt-6 text-sm text-muted-foreground leading-relaxed">
               Even small error rates compound across chained tool calls. Veto prevents the bad envelope
-              from becoming an irreversible diff — it does not file a ticket about the damage afterward.
+              from becoming an irreversible diff. It does not file a ticket about the damage afterward.
             </p>
           </div>
         </div>
       </div>
-    </section>
-  );
-}
-
-function Hero() {
-  return (
-    <section className="relative mx-auto max-w-6xl px-6 pb-12 pt-20 sm:pb-16 sm:pt-28 lg:pb-20">
-      <div className="relative z-[1] flex justify-center pb-10">
-        <div className="inline-flex items-center gap-3 rounded-full border border-border/80 bg-gradient-to-r from-card/92 via-background/76 to-background/92 px-4 py-1.5 text-xs shadow-[0_0_0_1px_color-mix(in_oklab,var(--ice)_18%,transparent)] backdrop-blur-md">
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-40" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-signal" />
-          </span>
-          <span className="font-mono tracking-wide text-muted-foreground">
-            Live execution control · <span className="text-foreground/95">&lt;50ms</span> per envelope
-          </span>
-        </div>
-      </div>
-
-      <div className="relative z-[1] mx-auto max-w-[1180px] text-center">
-        <h1 className="font-bold leading-[1.02] tracking-[-0.045em] text-5xl sm:text-7xl lg:text-[5.125rem]">
-          <span className="veto-heading-shimmer pb-1">Production agents already issue</span>{" "}
-          <br className="hidden sm:block" />
-          <span className="text-muted-foreground">database deletes, payouts, outbound mail · ungated.</span>
-        </h1>
-
-        <p className="mx-auto mt-10 max-w-3xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
-          <span className="font-semibold text-foreground">Veto sits between every agent and every action.</span>{" "}
-          It intercepts every database query, API call, shell invocation, and outbound message while it is
-          still in flight. In under 50ms it models what would happen if the action became real — then it
-          allows, escalates, or hard-stops the commit.
-        </p>
-
-        <p className="mx-auto mt-6 max-w-2xl border-y border-white/[0.06] py-6 text-[0.95rem] leading-relaxed text-muted-foreground/95">
-          <span className="text-foreground font-medium">
-            This is mandatory infrastructure · not optional tooling.
-          </span>{" "}
-          If an action never passes the decision layer, it never touches production. Logs do not rewind
-          deleted rows · guardrails do not undelete Stripe objects · budgets do not resurrect dropped
-          tables.
-        </p>
-      </div>
-
-      <div className="relative z-[1] mt-14" id="early-access">
-        <WaitlistForm />
-      </div>
-
-      <p className="relative z-[1] mx-auto mt-10 max-w-xl text-center font-mono text-[10px] uppercase tracking-[0.26em] text-muted-foreground/85">
-        <a href="#moment" className="text-ice/90 underline-offset-4 hover:underline">
-          Watch SQL halted mid-flight
-        </a>{" "}
-        · continuous evaluation · no silent bypass
-      </p>
     </section>
   );
 }
@@ -361,7 +308,7 @@ function EnginesSection() {
   const axes = [
     {
       title: "Concrete blast",
-      body: "Row counts deleted, dollars moved, inboxes touched — stated as operations people recognize.",
+      body: "Row counts deleted, dollars moved, inboxes touched, stated as operations people recognize.",
     },
     {
       title: "Historical twins",
@@ -393,7 +340,7 @@ function EnginesSection() {
           <span className="text-foreground font-medium">
             every AI action must pass through a decision layer before it becomes reality.
           </span>{" "}
-          Tiny miss rates amplify across sequential tool hops — these checks run on every hop, every time.
+          Tiny miss rates amplify across sequential tool hops. These checks run on every hop, every time.
         </p>
 
         <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
@@ -435,7 +382,7 @@ function TrustLine() {
           ))}
         </div>
         <p className="mx-auto mt-9 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-          Wire the execution plane once — every runtime inherits the same rule: no agent output becomes a
+          Wire the execution plane once. Every runtime inherits the same rule: no agent output becomes a
           production side effect without passing Veto first.
         </p>
       </div>

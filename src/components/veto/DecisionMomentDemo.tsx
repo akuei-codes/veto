@@ -7,7 +7,7 @@ const ACTION_RAW = `DELETE FROM users WHERE last_seen_at < NOW() - INTERVAL '400
 const INTENT_LABEL = '"clean dormant accounts"';
 
 const UNDERSTOOD =
-  "This query would have permanently deleted 12,481 user rows — including 2,104 with active subscriptions and live Stripe billing artifacts. MVCC would stall concurrent readers; cascades would tear through audits, sessions, and downstream mirrors. One round-trip from total data loss.";
+  "This query would have permanently deleted 12,481 user rows, including 2,104 with active subscriptions and live Stripe billing artifacts. MVCC would stall concurrent readers; cascades would tear through audits, sessions, and downstream mirrors. One round-trip from total data loss.";
 
 /** Signature “holy shit” narrative: lethal action intercepted mid-flight, consequence surfaced, verdict. */
 export function DecisionMomentDemo() {
@@ -49,7 +49,7 @@ export function DecisionMomentDemo() {
 
           <h3 className="mt-6 text-2xl font-bold tracking-tight sm:text-3xl">
             The moment an action either{" "}
-            <span className="text-signal">exists</span> — or{" "}
+            <span className="text-signal">exists</span> ... or{" "}
             <span className="text-block">never does</span>.
           </h3>
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-[0.9375rem]">
@@ -139,7 +139,7 @@ export function DecisionMomentDemo() {
 
                 <div className="rounded-lg border border-border/60 bg-background/50 px-3 py-2.5 font-mono text-[11px] text-muted-foreground">
                   <span className="text-signal/90">Learning layer · </span>
-                  Structure matches destructive SQL envelopes this org already halted — calibrated to your
+                  Structure matches destructive SQL envelopes this org already halted, calibrated to your
                   live schema graph.
                 </div>
               </div>
