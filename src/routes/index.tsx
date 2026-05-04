@@ -12,6 +12,7 @@ import {
   GhostExecutionPreview,
   MemoryMoatPanel,
 } from "@/components/veto/VetoPillars";
+import { FOUNDERS_EMAIL, foundersMailto } from "@/constants/contact";
 import { VetoHeroStage } from "@/components/veto/VetoHeroStage";
 
 export const Route = createFileRoute("/")({
@@ -88,16 +89,24 @@ function Header() {
             Decision layer
           </span>
         </Link>
-        <a
-          href="#early-access"
-          className="group inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-surface/50 px-3.5 py-1.5 font-mono text-xs text-muted-foreground transition-colors hover:border-ice/35 hover:bg-surface hover:text-ice"
-        >
-          early access
-          <ArrowUpRight
-            className="size-3.5 opacity-75 transition-transform group-hover:-translate-y-px group-hover:translate-x-px"
-            aria-hidden
-          />
-        </a>
+        <div className="flex items-center gap-2">
+          <a
+            href={foundersMailto}
+            className="inline-flex rounded-full border border-border/70 bg-surface/50 px-3 py-1.5 font-mono text-xs text-muted-foreground transition-colors hover:border-ice/35 hover:bg-surface hover:text-ice"
+          >
+            founders
+          </a>
+          <a
+            href="#early-access"
+            className="group inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-surface/50 px-3.5 py-1.5 font-mono text-xs text-muted-foreground transition-colors hover:border-ice/35 hover:bg-surface hover:text-ice"
+          >
+            early access
+            <ArrowUpRight
+              className="size-3.5 opacity-75 transition-transform group-hover:-translate-y-px group-hover:translate-x-px"
+              aria-hidden
+            />
+          </a>
+        </div>
       </div>
     </header>
   );
@@ -421,6 +430,15 @@ function CTASection() {
           <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground/90">
             Production slots limited · prioritized response
           </p>
+          <p className="mt-5 text-sm text-muted-foreground">
+            Reach founders directly:{" "}
+            <a
+              href={foundersMailto}
+              className="font-mono text-ice underline-offset-4 transition-colors hover:text-ice/90 hover:underline"
+            >
+              {FOUNDERS_EMAIL}
+            </a>
+          </p>
         </div>
       </div>
     </section>
@@ -430,17 +448,28 @@ function CTASection() {
 function Footer() {
   return (
     <footer className="border-t border-border/50">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-5 px-6 py-11 text-sm text-muted-foreground sm:flex-row">
-        <Link to="/" className="group flex flex-wrap items-center justify-center gap-2.5 sm:justify-start">
-          <Logo />
-          <span className="font-semibold text-foreground transition-colors group-hover:text-foreground/90">
-            Veto
-          </span>
-          <span className="font-mono text-xs text-center sm:text-start">
-            Every AI action passes through here before reality does
-          </span>
-        </Link>
-        <span className="font-mono text-[11px] tracking-wide">© {new Date().getFullYear()} veto.ink</span>
+      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-11 text-sm text-muted-foreground">
+        <div className="flex flex-col items-center justify-between gap-5 sm:flex-row">
+          <Link to="/" className="group flex flex-wrap items-center justify-center gap-2.5 sm:justify-start">
+            <Logo />
+            <span className="font-semibold text-foreground transition-colors group-hover:text-foreground/90">
+              Veto
+            </span>
+            <span className="font-mono text-xs text-center sm:text-start">
+              Every AI action passes through here before reality does
+            </span>
+          </Link>
+          <span className="font-mono text-[11px] tracking-wide">© {new Date().getFullYear()} veto.ink</span>
+        </div>
+        <div className="flex justify-center border-t border-border/40 pt-8 sm:justify-end">
+          <a
+            href={foundersMailto}
+            className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-surface/50 px-4 py-2 font-mono text-xs text-ice transition-colors hover:border-ice/40 hover:bg-surface hover:text-ice/95"
+          >
+            <span className="text-muted-foreground">Founders</span>
+            <span className="text-foreground/95">{FOUNDERS_EMAIL}</span>
+          </a>
+        </div>
       </div>
     </footer>
   );

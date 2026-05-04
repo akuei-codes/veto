@@ -1,6 +1,7 @@
 import { Cpu, Database, Globe, Mail, Terminal } from "lucide-react";
 
 import { WaitlistForm } from "@/components/veto/WaitlistForm";
+import { FOUNDERS_EMAIL, foundersMailto } from "@/constants/contact";
 
 /** First fold: visual execution plane + structured tiles + HUD readout (copy preserved, not wall-of-text). */
 export function VetoHeroStage() {
@@ -58,6 +59,12 @@ export function VetoHeroStage() {
           Watch SQL halted mid-flight
         </a>{" "}
         · continuous evaluation · no silent bypass
+        <span className="mt-3 block normal-case tracking-normal text-muted-foreground/90">
+          <a href={foundersMailto} className="text-ice/90 underline-offset-4 hover:underline">
+            {FOUNDERS_EMAIL}
+          </a>{" "}
+          — founders inbox
+        </span>
       </p>
     </section>
   );

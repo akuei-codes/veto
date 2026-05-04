@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { Check, Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
+import { FOUNDERS_EMAIL, foundersMailto } from "@/constants/contact";
 import { joinWaitlist } from "@/waitlist/joinWaitlist.fn";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -184,6 +185,12 @@ export function WaitlistForm() {
           </div>
           <p className="mt-3.5 px-1 text-center text-[11px] leading-relaxed font-mono text-muted-foreground/85">
             Veto never resells addresses. One confirmation · then materially important updates only.
+          </p>
+          <p className="mt-2 px-1 text-center text-[11px] leading-relaxed text-muted-foreground/90">
+            Prefer email?{" "}
+            <a href={foundersMailto} className="font-mono text-ice underline-offset-4 hover:underline">
+              {FOUNDERS_EMAIL}
+            </a>
           </p>
         </div>
       </div>
