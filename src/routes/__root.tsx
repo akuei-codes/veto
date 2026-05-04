@@ -73,7 +73,6 @@ export const Route = createRootRoute({
         },
       ],
       links: [
-        { rel: "icon", href: "/favicon.ico", type: "image/x-icon", sizes: "48x48 32x32 16x16" },
         { rel: "stylesheet", href: appCss },
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
@@ -93,6 +92,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon" />
         <HeadContent />
       </head>
       <body>
