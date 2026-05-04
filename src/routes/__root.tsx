@@ -11,9 +11,38 @@ function siteOrigin(): string | undefined {
   return raw.trim().replace(/\/$/, "");
 }
 
+/**
+ * URL users ultimately see (no trailing slash). Vercel may 307 apex → www; absolute asset and
+ * OG URLs should target this host or crawlers/browsers can hit a redirect chain (tab icons are
+ * particularly sensitive).
+ */
+function canonicalSiteOrigin(): string | undefined {
+  const o = siteOrigin();
+  if (!o) return undefined;
+  try {
+    const u = new URL(o);
+    if (u.hostname === "veto.ink") {
+      return "https://www.veto.ink";
+    }
+    return u.origin;
+  } catch {
+    return o;
+  }
+}
+
 function ogImageUrl(): string {
-  const origin = siteOrigin();
+  const origin = canonicalSiteOrigin();
   return origin ? `${origin}/veto-og.png` : "/veto-og.png";
+}
+
+function faviconIcoHref(): string {
+  const origin = canonicalSiteOrigin();
+  return origin ? `${origin}/favicon.ico` : "/favicon.ico";
+}
+
+function faviconPngHref(): string {
+  const origin = canonicalSiteOrigin();
+  return origin ? `${origin}/veto-favicon-source.png` : "/veto-favicon-source.png";
 }
 
 function NotFoundComponent() {
@@ -40,7 +69,7 @@ function NotFoundComponent() {
 
 export const Route = createRootRoute({
   head: () => {
-    const origin = siteOrigin();
+    const canonical = canonicalSiteOrigin();
     return {
       meta: [
         { charSet: "utf-8" },
@@ -62,7 +91,7 @@ export const Route = createRootRoute({
         { property: "og:image", content: ogImageUrl() },
         { property: "og:image:type", content: "image/png" },
         { property: "og:image:alt", content: "Veto — real-time interception of AI execution" },
-        ...(origin ? ([{ property: "og:url", content: origin }] as const) : []),
+        ...(canonical ? ([{ property: "og:url", content: canonical }] as const) : []),
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:image", content: ogImageUrl() },
         { name: "twitter:title", content: "Veto — Agents do not bypass the decision plane" },
@@ -92,7 +121,9 @@ function RootShell({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon" />
+        <link rel="icon" type="image/png" href={faviconPngHref()} sizes="32x32" />
+        <link rel="icon" href={faviconIcoHref()} type="image/vnd.microsoft.icon" />
+        <link rel="apple-touch-icon" href={faviconPngHref()} />
         <HeadContent />
       </head>
       <body>
